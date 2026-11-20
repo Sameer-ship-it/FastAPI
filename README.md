@@ -1,63 +1,61 @@
 # FastAPI Learning Projects
 
-A Python learning repository with two FastAPI applications, a model-training notebook, and standalone Pydantic validation examples.
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
+![Pydantic](https://img.shields.io/badge/Validation-Pydantic-E92063)
+![Project type](https://img.shields.io/badge/Status-Learning%20projects-informational)
 
-## Contents
+A Python portfolio repository exploring REST API fundamentals, request validation, local persistence, and serving a saved machine-learning model. It contains two independent FastAPI applications and a set of Pydantic examples.
 
-| Path | Description |
+## Project map
+
+| Path | Purpose |
 | --- | --- |
-| `main.py` | Patient-record API backed by a local JSON file |
-| `app.py` | Insurance-premium prediction API using the saved `model.pkl` artifact |
-| `fastapi_ml_model.ipynb` | Notebook for the machine-learning workflow |
-| `Pydantic/` | Small examples of validation and computed fields |
+| [main.py](main.py) | Patient-record API backed by a local JSON file |
+| [app.py](app.py) | Insurance premium prediction API using the saved `model.pkl` artifact |
+| [fastapi_ml_model.ipynb](fastapi_ml_model.ipynb) | Notebook for the model workflow |
+| [Pydantic/](Pydantic/) | Validation and computed-field examples |
 
-Run one API at a time. The patient API and prediction API have different endpoints and data requirements.
+## Request flow
 
-## Requirements
+```mermaid
+flowchart LR
+    C[API client] --> A[FastAPI application]
+    A --> V[Request validation]
+    V --> R{Selected example}
+    R -->|Patient records| J[Local JSON file]
+    R -->|Premium prediction| M[Saved model artifact]
+    A --> D[Interactive API docs]
+```
 
-Use a Python version compatible with the installed FastAPI and Pydantic releases. Install the runtime packages:
+Start one application at a time. Both expose interactive documentation at `http://127.0.0.1:8000/docs`.
 
-```bash
+## Run locally
+
+Create and activate a virtual environment, then install the packages used by the examples:
+
+```powershell
 python -m venv .venv
-```
-
-Activate the environment and install dependencies:
-
-```bash
-# Windows PowerShell
 .venv\Scripts\Activate.ps1
-# macOS / Linux
-source .venv/bin/activate
-```
-
-```bash
 python -m pip install fastapi "uvicorn[standard]" pydantic pandas scikit-learn
 ```
 
-## Run an API
+On macOS or Linux, activate with `source .venv/bin/activate`.
 
-From the repository root, start the patient-record example:
+Start either app from the repository root:
 
 ```bash
+# Patient-record API
 uvicorn main:app --reload
-```
 
-Or start the model-backed prediction example instead:
-
-```bash
+# Or, in a separate run, the model-backed API
 uvicorn app:app --reload
 ```
 
-Open `http://127.0.0.1:8000/docs` for the interactive API documentation. The prediction API loads `model.pkl` during startup.
+Visit `http://127.0.0.1:8000/docs` to try the selected API. The prediction app requires `model.pkl`; create or provide the artifact using the project notebook if it is not present in your checkout.
 
-## Data and safety
+## Safety and scope
 
-The patient example uses local JSON data and is an educational exercise, not a secure medical-record system. Do not enter real patient information. The checked-in model is a serialized pickle artifact; only load pickle files from sources you trust.
-
-## Project status
-
-This repository collects learning examples. It does not currently include a dependency lockfile, deployment configuration, or a production security setup.
-
-## Author
-
-[Sameer Raza](https://github.com/Sameer-ship-it)
+- These are learning examples, not production services.
+- Do not enter real patient data. The JSON-backed example does not provide production access controls or secure medical-record handling.
+- Pickle files can execute code when loaded. Only use model artifacts from trusted sources.
